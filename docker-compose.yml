@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mysql@latest
+    image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mydb
