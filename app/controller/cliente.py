@@ -5,17 +5,15 @@ from app.dto.cliente import ClienteCreate, ClienteUpdate
 from fastapi import HTTPException
 from sqlmodel import select
 
-class ClienteService:
+class ClienteController:
     @staticmethod
     def create_cliente(cliente_data: ClienteCreate, db: Session) -> cliente_model:
-        try:
-            db_cliente = cliente_model(**cliente_data.model_dump())
-            db.add(db_cliente)
-            db.commit()
-            db.refresh(db_cliente)
-            return db_cliente
-        except Exception as e:
-            return e
+        db_cliente = cliente_model(**cliente_data.model_dump())
+        db.add(db_cliente)
+        db.commit()
+        db.refresh(db_cliente)
+        return db_cliente
+
             
 
     @staticmethod
