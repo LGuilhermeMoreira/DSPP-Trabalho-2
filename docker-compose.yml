@@ -6,7 +6,7 @@ services:
       MYSQL_DATABASE: mydb
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    restart: always
+    # restart: always
     ports:
       - "4001:3306"
     volumes:
