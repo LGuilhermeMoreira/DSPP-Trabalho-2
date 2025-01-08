@@ -1,6 +1,8 @@
 from typing import Optional, List
 from sqlmodel import Field, Relationship, SQLModel
-
+# from .cliente import Cliente
+# from .mesa import Mesa
+# from .prato import Prato
 class Comanda(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     id_cliente: Optional[int] = Field(default=None, foreign_key="cliente.id")

@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.cliente import Cliente as cliente_model
+from app.models.all_models import Cliente as cliente_model
 from app.dto.cliente import ClienteCreate, ClienteUpdate
 from fastapi import HTTPException
 from sqlmodel import select
@@ -8,11 +8,15 @@ from sqlmodel import select
 class ClienteService:
     @staticmethod
     def create_cliente(cliente_data: ClienteCreate, db: Session) -> cliente_model:
-        db_cliente = cliente_model(**cliente_data.model_dump())
-        db.add(db_cliente)
-        db.commit()
-        db.refresh(db_cliente)
-        return db_cliente
+        try:
+            db_cliente = cliente_model(**cliente_data.model_dump())
+            db.add(db_cliente)
+            db.commit()
+            db.refresh(db_cliente)
+            return db_cliente
+        except Exception as e:
+            return e
+            
 
     @staticmethod
     def list_clientes(db: Session) -> List[cliente_model]:

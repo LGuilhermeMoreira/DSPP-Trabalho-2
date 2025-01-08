@@ -1,7 +1,7 @@
 from sqlmodel import Field, Relationship, SQLModel
 from typing import Optional
 # from app.models.comanda import Comanda
-from .comanda import Comanda
+# from .comanda import Comanda
 
 class Mesa(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
