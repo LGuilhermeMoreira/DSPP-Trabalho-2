@@ -1,12 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
 from .config import settings
+import sys
+try:
+    engine = create_engine(settings.DATABASE_URL)
+except:
+    print("banco de dados não conectado")
+    sys.exit()
 
-engine = create_engine(
-    settings.DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
-
+SQLModel.metadata
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
@@ -15,3 +18,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)

@@ -8,7 +8,7 @@ from sqlmodel import select
 class ClienteService:
     @staticmethod
     def create_cliente(cliente_data: ClienteCreate, db: Session) -> cliente_model:
-        db_cliente = cliente_model(**cliente_data.dict())
+        db_cliente = cliente_model(**cliente_data.model_dump())
         db.add(db_cliente)
         db.commit()
         db.refresh(db_cliente)

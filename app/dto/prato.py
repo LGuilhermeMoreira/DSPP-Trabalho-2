@@ -1,8 +1,10 @@
 from pydantic import BaseModel
-class IngredienteCreate(BaseModel):
+class PratoCreate(BaseModel):
     nome: str
-    estoque: float
+    preco: float
+    descricao:  str | None
 
-class IngredienteUpdate(BaseModel):
-    nome: Optional[str] = None
-    estoque: Optional[float] = None
+class PratoUpdate(BaseModel):
+    nome:  str | None
+    preco: float | None
+    descricao:  str | None
