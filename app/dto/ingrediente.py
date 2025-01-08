@@ -2,9 +2,9 @@ from pydantic import BaseModel
 class PratoCreate(BaseModel):
     nome: str
     preco: float
-    descricao: Optional[str] = None
+    descricao:  str | None
 
 class PratoUpdate(BaseModel):
-    nome: Optional[str] = None
-    preco: Optional[float] = None
-    descricao: Optional[str] = None
+    nome:  str | None
+    preco: float | None
+    descricao:  str | None
