@@ -8,43 +8,66 @@ from sqlmodel import select
 class ClienteController:
     @staticmethod
     def create_cliente(cliente_data: ClienteCreate, db: Session) -> cliente_model:
-        db_cliente = cliente_model(**cliente_data.model_dump())
-        db.add(db_cliente)
-        db.commit()
-        db.refresh(db_cliente)
-        return db_cliente
-
-            
+        try:
+            db_cliente = cliente_model(**cliente_data.model_dump())
+            db.add(db_cliente)
+        except Exception as e:           
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.commit()
+            db.refresh(db_cliente)
+            return db_cliente      
 
     @staticmethod
     def list_clientes(db: Session) -> List[cliente_model]:
-        clientes = db.execute(select(cliente_model)).scalars().all()
-        return clientes
+        try:
+            clientes = db.execute(select(cliente_model)).scalars().all()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return clientes
 
     @staticmethod
     def get_cliente(cliente_id: int, db: Session) -> cliente_model:
-        db_cliente = db.get(cliente_model, cliente_id)
-        if not db_cliente:
-            raise HTTPException(status_code=404, detail="Cliente not found")
-        return db_cliente
+        try:
+            cliente = db.get(cliente_model, cliente_id)
+            if not cliente:
+                raise HTTPException(status_code=404, detail="Cliente not found")
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return cliente  
 
     @staticmethod
     def update_cliente(cliente_id: int, cliente_data: ClienteUpdate, db: Session) -> cliente_model:
-        db_cliente = db.get(cliente_model, cliente_id)
-        if not db_cliente:
-            raise HTTPException(status_code=404, detail="Cliente not found")
-        for key, value in cliente_data.dict(exclude_unset=True).items():
-            setattr(db_cliente, key, value)
-        db.add(db_cliente)
-        db.commit()
-        db.refresh(db_cliente)
-        return db_cliente
+        try:
+            db_cliente = db.get(cliente_model, cliente_id)
+            if not db_cliente:
+                raise HTTPException(status_code=404, detail="Cliente not found")
+            for key, value in cliente_data.model_dump(exclude_unset=True).items():
+                setattr(db_cliente, key, value)
+            db.add(db_cliente)
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.commit()
+            db.refresh(db_cliente)
+            return db_cliente
 
     @staticmethod
     def delete_cliente(cliente_id: int, db: Session) -> bool:
-        db_cliente = db.get(cliente_model, cliente_id)
-        if not db_cliente:
-            raise HTTPException(status_code=404, detail="Cliente not found")
-        db.delete(db_cliente)
-        db.commit()
-        return True
+        try:
+            db_cliente = db.get(cliente_model, cliente_id)
+            if not db_cliente:
+                raise HTTPException(status_code=404, detail="Cliente not found")
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.delete(db_cliente)
+            db.commit()
+            return True

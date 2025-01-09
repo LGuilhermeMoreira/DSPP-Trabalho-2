@@ -1,10 +1,17 @@
 from fastapi import FastAPI
-from app.router.cliente import router as cliente_router
-from app.config.init_db import create_db_and_tables
+from app.router.cliente import router_cliente
+from app.router.comanda import router_comanda
+from app.router.ingrediente import router_ingrediente
+from app.router.mesa import router_mesa
+from app.router.prato import router_prato
 app = FastAPI()
-create_db_and_tables()
 
-app.include_router(cliente_router, prefix="/api")
+app.include_router(router_cliente, prefix="/cliente")
+app.include_router(router_comanda, prefix="/comanda")
+app.include_router(router_ingrediente, prefix="/ingrediente")
+app.include_router(router_mesa, prefix="/mesa")
+app.include_router(router_prato, prefix="/prato")
+
 
 @app.get("/")
 def read_root():

@@ -5,12 +5,11 @@ from .config import settings
 import sys
 try:
     engine = create_engine(settings.DATABASE_URL)
+    SQLModel.metadata.create_all(engine)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 except:
     print("banco de dados não conectado")
     sys.exit()
-
-SQLModel.metadata
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
     db = SessionLocal()
