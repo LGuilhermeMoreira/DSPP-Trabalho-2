@@ -30,7 +30,7 @@ class Comanda(SQLModel, table=True):
 
     cliente: Optional["Cliente"] = Relationship(back_populates="comandas")
     mesa: Optional["Mesa"] = Relationship(back_populates="comanda")
-    pratos: List["Prato"] = Relationship(back_populates="comandas", link_model= ComandaPratoLink) # Removido as aspas
+    pratos: List["Prato"] = Relationship(back_populates="comandas", link_model= ComandaPratoLink) 
 
 class Ingrediente(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -39,7 +39,7 @@ class Ingrediente(SQLModel, table=True):
     quantidade_estoque: float
     peso: float
 
-    pratos: List["Prato"] = Relationship(back_populates="ingredientes", link_model=PratoIngredienteLink) # Removido as aspas
+    pratos: List["Prato"] = Relationship(back_populates="ingredientes", link_model=PratoIngredienteLink) 
 
 class Mesa(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -57,5 +57,5 @@ class Prato(SQLModel, table=True):
     descricao: Optional[str]
     disponivel: bool = Field(default=True)
 
-    comandas: List["Comanda"] = Relationship(back_populates="pratos", link_model=ComandaPratoLink) # Removido as aspas
-    ingredientes: List["Ingrediente"] = Relationship(back_populates="pratos", link_model=PratoIngredienteLink) # Removido as aspas
+    comandas: List["Comanda"] = Relationship(back_populates="pratos", link_model=ComandaPratoLink)
+    ingredientes: List["Ingrediente"] = Relationship(back_populates="pratos", link_model=PratoIngredienteLink)
