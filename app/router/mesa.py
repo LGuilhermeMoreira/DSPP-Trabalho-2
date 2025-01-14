@@ -27,3 +27,7 @@ def update_mesa(mesa_id: int, mesa_data: MesaUpdate, db: Session = Depends(get_d
 @router_mesa.delete("/{mesa_id}")
 def delete_mesa(mesa_id: int, db: Session = Depends(get_db)):
     return {"ok": MesaController.delete_mesa(mesa_id, db)}
+
+@router_mesa.get("/num")
+def get_num_mesas(db: Session = Depends(get_db)):
+    return MesaController.um_mesa(db)

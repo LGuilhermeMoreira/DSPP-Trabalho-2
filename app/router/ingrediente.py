@@ -27,3 +27,7 @@ def update_ingrediente(ingrediente_id: int, ingrediente_data: IngredienteUpdate,
 @router_ingrediente.delete("/{ingrediente_id}")
 def delete_ingrediente(ingrediente_id: int, db: Session = Depends(get_db)):
     return {"ok": IngredienteController.delete_ingrediente(ingrediente_id, db)}
+
+@router_ingrediente.get("/num")
+def get_num_ingredientes(db: Session = Depends(get_db)):
+    return IngredienteController.num_ingrediente(db)

@@ -31,3 +31,7 @@ def update_cliente(cliente_id: int, cliente_data: ClienteUpdate, db: Session = D
 @router_cliente.delete("/{cliente_id}")
 def delete_cliente(cliente_id: int, db: Session = Depends(get_db)):
     return {"ok": ClienteController.delete_cliente(cliente_id, db)}
+
+@router_cliente.get("/num")
+def get_num_clientes(db: Session = Depends(get_db)):
+    return ClienteController.num_cliente(db)

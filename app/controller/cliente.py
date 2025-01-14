@@ -71,3 +71,13 @@ class ClienteController:
             db.delete(db_cliente)
             db.commit()
             return True
+        
+    @staticmethod
+    def num_cliente(db: Session) -> int:
+        try:
+            num = db.execute(select(cliente_model)).count()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return {"quantiade" : num}

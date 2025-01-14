@@ -71,3 +71,13 @@ class MesaController:
             db.delete(db_mesa)
             db.commit()
             return True
+    
+    @staticmethod
+    def num_mesa(db: Session) -> int:
+        try:
+            num = db.execute(select(mesa_model)).count()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return {"quantiade" : num}

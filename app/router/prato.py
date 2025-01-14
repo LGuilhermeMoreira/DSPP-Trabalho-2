@@ -27,3 +27,7 @@ def update_prato(prato_id: int, prato_data: PratoUpdate, db: Session = Depends(g
 @router_prato.delete("/{prato_id}")
 def delete_prato(prato_id: int, db: Session = Depends(get_db)):
     return {"ok": PratoController.delete_prato(prato_id, db)}
+
+@router_prato.get("/num")
+def get_num_pratos(db: Session = Depends(get_db)):
+    return PratoController.num_prato(db)

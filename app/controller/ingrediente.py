@@ -71,3 +71,15 @@ class IngredienteController:
             db.delete(db_ingrediente)
             db.commit()
             return True
+    
+    @staticmethod
+    def num_ingrediente(db: Session) -> int:
+        try:
+            num = db.execute(select(ingrediente_model)).count()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return {"quantiade" : num}
+    
+    

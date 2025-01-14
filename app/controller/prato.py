@@ -71,3 +71,13 @@ class PratoController:
             db.delete(db_prato)
             db.commit()
             return True
+        
+    @staticmethod
+    def num_prato(db: Session) -> int:
+        try:
+            num = db.execute(select(prato_model)).count()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return {"quantiade" : num}
