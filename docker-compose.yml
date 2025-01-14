@@ -11,3 +11,8 @@ services:
       - "4001:3306"
     volumes:
       - ./mysql:/var/lib/mysql
+
+# para quem for testar isso
+# docker-compose up -d
+# criar um arquivo .env com 
+# DATABASE_URL="mysql+pymysql://<user>:<password>@localhost:<port>/<database_name>"
