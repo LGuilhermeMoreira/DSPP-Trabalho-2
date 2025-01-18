@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
-from typing import List
+from fastapi import APIRouter, Depends, Query
+from typing import Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Cliente as cliente_model
 from app.dto.cliente import ClienteCreate, ClienteUpdate
@@ -12,11 +12,13 @@ router_cliente = APIRouter()
 def create_cliente(cliente_data: ClienteCreate, db: Session = Depends(get_db)):
     return ClienteController.create_cliente(cliente_data, db)
 
-
-@router_cliente.get("/", response_model=List[cliente_model])
-def list_clientes(db: Session = Depends(get_db)):
-    return ClienteController.list_clientes(db)
-
+@router_cliente.get("/", response_model=Dict[str, Any])
+def list_clientes(
+    page: int = Query(1, description="Número da página", ge=1),
+    limit: int = Query(10, description="Número de itens por página", ge=1),
+    db: Session = Depends(get_db)
+):
+    return ClienteController.list_clientes(db, page=page, limit=limit)
 
 @router_cliente.get("/{cliente_id}", response_model=cliente_model)
 def get_cliente(cliente_id: int, db: Session = Depends(get_db)):

@@ -1,9 +1,11 @@
-from typing import List, Optional
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Cliente as cliente_model
 from app.dto.cliente import ClienteCreate, ClienteUpdate
 from fastapi import HTTPException
 from sqlmodel import select
+from sqlalchemy import func
+import math
 
 class ClienteController:
     @staticmethod
@@ -20,15 +22,25 @@ class ClienteController:
             return db_cliente      
 
     @staticmethod
-    def list_clientes(db: Session) -> List[cliente_model]:
+    def list_clientes(db: Session, page: int = 1, limit: int = 10) -> Dict[str, Any]:
         try:
-            clientes = db.execute(select(cliente_model)).scalars().all()
+           offset = (page - 1) * limit
+           clientes = db.execute(select(cliente_model).offset(offset).limit(limit)).scalars().all()
+           total = db.query(func.count(cliente_model.id)).scalar()
+           total_pages = math.ceil(total / limit)
+           return {
+            "data": clientes,
+            "pagination": {
+                "totalItens": total,
+                "currentPage": page,
+                "totalPages": total_pages,
+                "totalItemsPerPage": limit
+               }
+            }
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return clientes
-
+    
     @staticmethod
     def get_cliente(cliente_id: int, db: Session) -> cliente_model:
         try:
