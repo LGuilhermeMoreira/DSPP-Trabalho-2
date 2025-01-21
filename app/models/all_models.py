@@ -17,7 +17,7 @@ class Cliente(SQLModel, table=True):
     telefone: Optional[str]
     email: Optional[str]
     cpf: str
-    faminto: bool
+    # faminto : bool = Field(default=False)
 
     comandas: List["Comanda"] = Relationship(back_populates="cliente")
 
