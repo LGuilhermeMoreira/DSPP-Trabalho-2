@@ -40,3 +40,11 @@ def delete_comanda(comanda_id: int, db: Session = Depends(get_db)):
 @router_comanda.get("/num",status_code=200)
 def get_num_comandas(db: Session = Depends(get_db)):
     return ComandaController.num_comanda(db)
+
+@router_comanda.get("/comandas_por_cliente/{cliente_id}",status_code=200)
+def comanda_por_cliente(db: Session = Depends(get_db),cliente_id: int = Query(None, description="Filtrar por ID do Cliente")):
+    return ComandaController.listar_comandas_por_cliente(db,cliente_id)
+
+@router_comanda.get("/comadas_por_ano/{ano}",status_code=200)
+def comandas_por_ano(db: Session = Depends(get_db),ano: int = Query(None, description="Filtrar por Ano")):
+    return ComandaController.listar_comandas_por_ano(db,ano)

@@ -8,11 +8,11 @@ from app.controller.prato import PratoController
 
 router_prato = APIRouter()
 
-@router_prato.post("/", response_model=prato_model)
+@router_prato.post("/", response_model=prato_model, status_code=201)
 def create_prato(prato_data: PratoCreate, db: Session = Depends(get_db)):
     return PratoController.create_prato(prato_data, db)
 
-@router_prato.get("/", response_model=Dict[str, Any])
+@router_prato.get("/", response_model=Dict[str, Any],status_code=200)
 def list_pratos(
     page: int = Query(1, description="Número da página", ge=1),
     limit: int = Query(10, description="Número de itens por página", ge=1),
@@ -32,18 +32,26 @@ def list_pratos(
         disponivel=disponivel,
     )
 
-@router_prato.get("/{prato_id}", response_model=prato_model)
+@router_prato.get("/{prato_id}", response_model=prato_model,status_code=200)
 def get_prato(prato_id: int, db: Session = Depends(get_db)):
     return PratoController.get_prato(prato_id, db)
 
-@router_prato.put("/{prato_id}", response_model=prato_model)
+@router_prato.put("/{prato_id}", response_model=prato_model,status_code=200)
 def update_prato(prato_id: int, prato_data: PratoUpdate, db: Session = Depends(get_db)):
     return PratoController.update_prato(prato_id, prato_data, db)
 
-@router_prato.delete("/{prato_id}")
+@router_prato.delete("/{prato_id}",status_code=204)
 def delete_prato(prato_id: int, db: Session = Depends(get_db)):
     return {"ok": PratoController.delete_prato(prato_id, db)}
 
-@router_prato.get("/num")
+@router_prato.get("/num",status_code=200)
 def get_num_pratos(db: Session = Depends(get_db)):
     return PratoController.num_prato(db)
+
+@router_prato.get("/ordenado_por_preco",status_code=200)
+def get_pratos_ordenados_por_preco(db: Session = Depends(get_db)):
+    return PratoController.listar_pratos_ordenados_por_preco(db)
+
+@router_prato.get("prato_por_ingrediente/{ingrediente_id}",status_code=200)
+def get_pratos_por_ingrediente(ingrediente_id: int, db: Session = Depends(get_db)):
+    return PratoController.listar_pratos_por_ingrediente(ingrediente_id, db)

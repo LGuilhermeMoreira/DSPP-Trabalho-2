@@ -131,3 +131,15 @@ class ComandaController:
             raise HTTPException(status_code=500, detail=str(e))
         finally:
             return comandas
+        
+    #filtro por ano
+    @staticmethod
+    def listar_comandas_por_ano(db: Session, ano: int):
+        try:
+            statement = select(comanda_model).where(func.extract('year', comanda_model.data_hora_abertura) == ano)
+            comandas = db.exec(statement).all()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return comandas 

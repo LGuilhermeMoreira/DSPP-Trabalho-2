@@ -123,16 +123,6 @@ class PratoController:
         finally:
             return {"quantiade" : num}
     
-    #busca por texto
-    @staticmethod
-    def buscar_pratos_por_nome(db: Session, texto: str):
-        try:
-            statement = select(prato_model).where(prato_model.nome.contains(texto))
-            pratos = db.exec(statement).all()
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        return pratos
     
     #busca e ordenação
     @staticmethod

@@ -1,5 +1,7 @@
 from typing import Optional, List
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship, SQLModel, DateTime
+from datetime import datetime
+
 
 class ComandaPratoLink(SQLModel, table=True):
     id_comanda: Optional[int] = Field(default=None, foreign_key="comanda.id", primary_key=True)
@@ -25,8 +27,8 @@ class Comanda(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     id_cliente: Optional[int] = Field(default=None, foreign_key="cliente.id")
     id_mesa: Optional[int] = Field(default=None, foreign_key="mesa.id", unique=True)
-    data_hora_abertura: str
-    data_hora_fechamento: Optional[str]
+    data_hora_abertura: datetime = Field(sa_column_kwargs={"default": datetime.now})
+    data_hora_fechamento: Optional[datetime] = Field(default=None)
     status: str
 
     cliente: Optional["Cliente"] = Relationship(back_populates="comandas")
