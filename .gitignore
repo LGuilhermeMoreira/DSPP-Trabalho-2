@@ -1,11 +1,4 @@
 mysql
 .env
-__pycache__
+__pycache__/
 alembic.ini
-alembic/__pycache__
-app/__pycache__
-app/config/__pycache__
-app/controllers/__pycache__
-app/dto/__pycache__
-app/models/__pycache__
-app/routes/__pycache__

@@ -17,6 +17,7 @@ class Cliente(SQLModel, table=True):
     telefone: Optional[str]
     email: Optional[str]
     cpf: str
+    faminto : bool = Field(default=False)
 
     comandas: List["Comanda"] = Relationship(back_populates="cliente")
 
@@ -47,7 +48,6 @@ class Mesa(SQLModel, table=True):
     capacidade: int
     ocupada: bool = Field(default=False)
     numero_pessoas: Optional[int]
-        
     comanda: Optional["Comanda"] = Relationship(back_populates="mesa", sa_relationship_kwargs={"uselist": False})
 
 class Prato(SQLModel, table=True):
