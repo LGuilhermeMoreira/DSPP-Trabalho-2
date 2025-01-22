@@ -12,7 +12,7 @@ router_ingrediente = APIRouter()
 def create_ingrediente(ingrediente_data: IngredienteCreate, db: Session = Depends(get_db)):
     return IngredienteController.create_ingrediente(ingrediente_data, db)
 
-@router_ingrediente.get("/", response_model=Dict[str, Any])
+@router_ingrediente.get("/", response_model=Dict[str, Any],status_code=200)
 def list_ingredientes(
     page: int = Query(1, description="Número da página", ge=1),
     limit: int = Query(10, description="Número de itens por página", ge=1),

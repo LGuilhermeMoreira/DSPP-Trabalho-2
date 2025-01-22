@@ -8,11 +8,11 @@ from app.controller.mesa import MesaController
 
 router_mesa = APIRouter()
 
-@router_mesa.post("/", response_model=mesa_model)
+@router_mesa.post("/", response_model=mesa_model,status_code=201)
 def create_mesa(mesa_data: MesaCreate, db: Session = Depends(get_db)):
     return MesaController.create_mesa(mesa_data, db)
 
-@router_mesa.get("/", response_model=Dict[str, Any])
+@router_mesa.get("/", response_model=Dict[str, Any],status_code=200)
 def list_mesas(
     page: int = Query(1, description="Número da página", ge=1),
     limit: int = Query(10, description="Número de itens por página", ge=1),
@@ -33,18 +33,18 @@ def list_mesas(
     )
 
 
-@router_mesa.get("/{mesa_id}", response_model=mesa_model)
+@router_mesa.get("/{mesa_id}", response_model=mesa_model, status_code=200)
 def get_mesa(mesa_id: int, db: Session = Depends(get_db)):
     return MesaController.get_mesa(mesa_id, db)
 
-@router_mesa.put("/{mesa_id}", response_model=mesa_model)
+@router_mesa.put("/{mesa_id}", response_model=mesa_model,status_code=200)
 def update_mesa(mesa_id: int, mesa_data: MesaUpdate, db: Session = Depends(get_db)):
     return MesaController.update_mesa(mesa_id, mesa_data, db)
 
-@router_mesa.delete("/{mesa_id}")
+@router_mesa.delete("/{mesa_id}",status_code=204)
 def delete_mesa(mesa_id: int, db: Session = Depends(get_db)):
     return {"ok": MesaController.delete_mesa(mesa_id, db)}
 
-@router_mesa.get("/num")
+@router_mesa.get("/num",200)
 def get_num_mesas(db: Session = Depends(get_db)):
     return MesaController.um_mesa(db)
