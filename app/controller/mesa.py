@@ -1,9 +1,11 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Mesa as mesa_model
 from app.dto.mesa import MesaCreate, MesaUpdate
 from fastapi import HTTPException
-from sqlmodel import select
+from sqlmodel import select, and_
+from sqlalchemy import func
+import math
 
 class MesaController:
     @staticmethod
@@ -20,14 +22,52 @@ class MesaController:
             return db_mesa
 
     @staticmethod
-    def list_mesas(db: Session) -> List[mesa_model]:
+    def list_mesas(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+        numero_mesa: Optional[int] = None,
+        capacidade: Optional[int] = None,
+        ocupada: Optional[bool] = None,
+        numero_pessoas: Optional[int] = None
+    ) -> Dict[str, Any]:
         try:
-            mesas = db.execute(select(mesa_model)).scalars().all()
+            offset = (page - 1) * limit
+            query = select(mesa_model)
+            
+            filters = []
+            if numero_mesa:
+              filters.append(mesa_model.numero_mesa == numero_mesa)
+            if capacidade:
+               filters.append(mesa_model.capacidade == capacidade)
+            if ocupada is not None:
+              filters.append(mesa_model.ocupada == ocupada)
+            if numero_pessoas:
+                 filters.append(mesa_model.numero_pessoas == numero_pessoas)
+            
+            if filters:
+                query = query.where(and_(*filters))
+        
+            mesas = db.execute(query.offset(offset).limit(limit)).scalars().all()
+            
+            total_query = select(func.count(mesa_model.id))
+            if filters:
+                 total_query = total_query.where(and_(*filters))
+            
+            total = db.execute(total_query).scalar()
+            total_pages = math.ceil(total / limit)
+            return {
+                "data": mesas,
+                "pagination": {
+                    "total": total,
+                    "currentPage": page,
+                    "totalPages": total_pages,
+                    "totalItemsPerPage": limit
+                },
+            }
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return mesas
 
     @staticmethod
     def get_mesa(mesa_id: int, db: Session) -> mesa_model:
