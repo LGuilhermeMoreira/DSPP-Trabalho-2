@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
-from typing import List
+from fastapi import APIRouter, Depends, Query
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Ingrediente as ingrediente_model
 from app.dto.ingrediente import IngredienteCreate, IngredienteUpdate
@@ -12,9 +12,28 @@ router_ingrediente = APIRouter()
 def create_ingrediente(ingrediente_data: IngredienteCreate, db: Session = Depends(get_db)):
     return IngredienteController.create_ingrediente(ingrediente_data, db)
 
-@router_ingrediente.get("/", response_model=List[ingrediente_model], status_code=200)
-def list_ingredientes(db: Session = Depends(get_db)):
-    return IngredienteController.list_ingredientes(db)
+@router_ingrediente.get("/", response_model=Dict[str, Any])
+def list_ingredientes(
+    page: int = Query(1, description="Número da página", ge=1),
+    limit: int = Query(10, description="Número de itens por página", ge=1),
+    nome: Optional[str] = Query(None, description="Filtrar por nome"),
+    estoque: Optional[bool] = Query(None, description="Filtrar por estoque"),
+    quantidade_estoque_min: Optional[float] = Query(None, description="Filtrar por quantidade mínima em estoque"),
+    quantidade_estoque_max: Optional[float] = Query(None, description="Filtrar por quantidade máxima em estoque"),
+    peso: Optional[float] = Query(None, description="Filtrar por peso"),
+    db: Session = Depends(get_db)
+):
+    return IngredienteController.list_ingredientes(
+        db,
+        page=page,
+        limit=limit,
+        nome=nome,
+        estoque=estoque,
+        quantidade_estoque_min=quantidade_estoque_min,
+        quantidade_estoque_max=quantidade_estoque_max,
+        peso=peso
+    )
+
 
 @router_ingrediente.get("/{ingrediente_id}", response_model=ingrediente_model, status_code=200)
 def get_ingrediente(ingrediente_id: int, db: Session = Depends(get_db)):

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 from app.models.all_models import Cliente as cliente_model
 from app.dto.cliente import ClienteCreate, ClienteUpdate
@@ -16,9 +16,12 @@ def create_cliente(cliente_data: ClienteCreate, db: Session = Depends(get_db)):
 def list_clientes(
     page: int = Query(1, description="Número da página", ge=1),
     limit: int = Query(10, description="Número de itens por página", ge=1),
+    nome: Optional[str] = Query(None, description="Filtrar por nome"),
+    email: Optional[str] = Query(None, description="Filtrar por email"),
+    cpf: Optional[str] = Query(None, description="Filtrar por CPF"),
     db: Session = Depends(get_db)
 ):
-    return ClienteController.list_clientes(db, page=page, limit=limit)
+    return ClienteController.list_clientes(db, page=page, limit=limit, nome=nome, email=email, cpf=cpf)
 
 @router_cliente.get("/{cliente_id}", response_model=cliente_model,status_code=200)
 def get_cliente(cliente_id: int, db: Session = Depends(get_db)):

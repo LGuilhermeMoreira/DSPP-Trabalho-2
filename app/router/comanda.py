@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
-from typing import List
+from fastapi import APIRouter, Depends, Query
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Comanda as comanda_model
 from app.dto.comanda import ComandaCreate, ComandaUpdate
@@ -12,9 +12,18 @@ router_comanda = APIRouter()
 def create_comanda(comanda_data: ComandaCreate, db: Session = Depends(get_db),):
     return ComandaController.create_comanda(comanda_data, db)
 
-@router_comanda.get("/", response_model=List[comanda_model],status_code=200)
-def list_comandas(db: Session = Depends(get_db)):
-    return ComandaController.list_comandas(db)
+
+@router_comanda.get("/", response_model=Dict[str, Any])
+def list_comandas(
+    page: int = Query(1, description="Número da página", ge=1),
+    limit: int = Query(10, description="Número de itens por página", ge=1),
+    id_cliente: Optional[int] = Query(None, description="Filtrar por ID do Cliente"),
+    id_mesa: Optional[int] = Query(None, description="Filtrar por ID da Mesa"),
+    status: Optional[str] = Query(None, description="Filtrar por Status"),
+    db: Session = Depends(get_db)
+):
+    return ComandaController.list_comandas(db, page=page, limit=limit, id_cliente=id_cliente, id_mesa=id_mesa, status=status)
+
 
 @router_comanda.get("/{comanda_id}", response_model=comanda_model,status_code=200)
 def get_comanda(comanda_id: int, db: Session = Depends(get_db)):

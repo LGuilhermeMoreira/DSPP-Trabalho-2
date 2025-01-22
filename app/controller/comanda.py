@@ -1,9 +1,12 @@
-from typing import List, Optional
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Comanda as comanda_model
 from app.dto.comanda import ComandaCreate, ComandaUpdate
 from fastapi import HTTPException
-from sqlmodel import select
+from sqlmodel import select, and_
+from sqlalchemy import func
+import math
+
 
 class ComandaController:
     @staticmethod
@@ -20,14 +23,49 @@ class ComandaController:
             return db_comanda
 
     @staticmethod
-    def list_comandas(db: Session) -> List[comanda_model]:
+    def list_comandas(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+        id_cliente: Optional[int] = None,
+        id_mesa: Optional[int] = None,
+        status: Optional[str] = None,
+    ) -> Dict[str, Any]:
         try:
-            comandas = db.execute(select(comanda_model)).scalars().all()
+            offset = (page - 1) * limit
+            query = select(comanda_model)
+            
+            filters = []
+            if id_cliente:
+              filters.append(comanda_model.id_cliente == id_cliente)
+            if id_mesa:
+                filters.append(comanda_model.id_mesa == id_mesa)
+            if status:
+                filters.append(comanda_model.status.ilike(f"%{status}%"))
+
+            if filters:
+                query = query.where(and_(*filters))
+        
+            comandas = db.execute(query.offset(offset).limit(limit)).scalars().all()
+            
+            total_query = select(func.count(comanda_model.id))
+            if filters:
+                total_query = total_query.where(and_(*filters))
+            
+            total = db.execute(total_query).scalar()
+            total_pages = math.ceil(total / limit)
+            return {
+                "data": comandas,
+                "pagination": {
+                    "total": total,
+                    "currentPage": page,
+                    "totalPages": total_pages,
+                    "totalItemsPerPage": limit
+                },
+            }
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return comandas
 
     @staticmethod
     def get_comanda(comanda_id: int, db: Session) -> comanda_model:

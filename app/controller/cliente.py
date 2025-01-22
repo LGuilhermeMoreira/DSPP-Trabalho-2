@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.all_models import Cliente as cliente_model
 from app.dto.cliente import ClienteCreate, ClienteUpdate
 from fastapi import HTTPException
-from sqlmodel import select
+from sqlmodel import select, and_
 from sqlalchemy import func
 import math
 
@@ -22,20 +22,45 @@ class ClienteController:
             return db_cliente      
 
     @staticmethod
-    def list_clientes(db: Session, page: int = 1, limit: int = 10) -> Dict[str, Any]:
+    def list_clientes(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+        nome: Optional[str] = None,
+        email: Optional[str] = None,
+        cpf: Optional[str] = None,
+    ) -> Dict[str, Any]:
         try:
-           offset = (page - 1) * limit
-           clientes = db.execute(select(cliente_model).offset(offset).limit(limit)).scalars().all()
-           total = db.query(func.count(cliente_model.id)).scalar()
-           total_pages = math.ceil(total / limit)
-           return {
-            "data": clientes,
-            "pagination": {
-                "totalItens": total,
-                "currentPage": page,
-                "totalPages": total_pages,
-                "totalItemsPerPage": limit
-               }
+            offset = (page - 1) * limit
+            query = select(cliente_model)
+            
+            filters = []
+            if nome:
+              filters.append(cliente_model.nome.ilike(f"%{nome}%"))
+            if email:
+               filters.append(cliente_model.email.ilike(f"%{email}%"))
+            if cpf:
+                filters.append(cliente_model.cpf.ilike(f"%{cpf}%"))
+          
+            if filters:
+                query = query.where(and_(*filters))
+        
+            clientes = db.execute(query.offset(offset).limit(limit)).scalars().all()
+            
+            total_query = select(func.count(cliente_model.id))
+            if filters:
+                total_query = total_query.where(and_(*filters))
+
+            total = db.execute(total_query).scalar()
+            total_pages = math.ceil(total / limit)
+            return {
+                "data": clientes,
+                "pagination": {
+                    "total": total,
+                    "currentPage": page,
+                    "totalPages": total_pages,
+                    "totalItemsPerPage": limit
+                },
             }
         except Exception as e:
             db.rollback()

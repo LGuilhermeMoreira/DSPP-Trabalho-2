@@ -1,10 +1,12 @@
-from typing import List
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Prato as prato_model
 from app.models.all_models import PratoIngredienteLink 
 from app.dto.prato import PratoCreate, PratoUpdate
 from fastapi import HTTPException
-from sqlmodel import select
+from sqlmodel import select, and_
+from sqlalchemy import func
+import math
 
 class PratoController:
     @staticmethod
@@ -21,14 +23,52 @@ class PratoController:
             return db_prato
 
     @staticmethod
-    def list_pratos(db: Session) -> List[prato_model]:
+    def list_pratos(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+        nome: Optional[str] = None,
+        preco_min: Optional[float] = None,
+        preco_max: Optional[float] = None,
+        disponivel: Optional[bool] = None,
+    ) -> Dict[str, Any]:
         try:
-            pratos = db.execute(select(prato_model)).scalars().all()
+            offset = (page - 1) * limit
+            query = select(prato_model)
+            
+            filters = []
+            if nome:
+                filters.append(prato_model.nome.ilike(f"%{nome}%"))
+            if preco_min is not None:
+                filters.append(prato_model.preco >= preco_min)
+            if preco_max is not None:
+                filters.append(prato_model.preco <= preco_max)
+            if disponivel is not None:
+                filters.append(prato_model.disponivel == disponivel)
+                
+            if filters:
+                query = query.where(and_(*filters))
+        
+            pratos = db.execute(query.offset(offset).limit(limit)).scalars().all()
+            
+            total_query = select(func.count(prato_model.id))
+            if filters:
+                total_query = total_query.where(and_(*filters))
+            
+            total = db.execute(total_query).scalar()
+            total_pages = math.ceil(total / limit)
+            return {
+                "data": pratos,
+                "pagination": {
+                    "total": total,
+                    "currentPage": page,
+                    "totalPages": total_pages,
+                    "totalItemsPerPage": limit
+                },
+            }
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return pratos
 
     @staticmethod
     def get_prato(prato_id: int, db: Session) -> prato_model:
