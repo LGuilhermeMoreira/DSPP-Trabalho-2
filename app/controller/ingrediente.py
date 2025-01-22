@@ -1,9 +1,11 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Ingrediente as ingrediente_model
 from app.dto.ingrediente import IngredienteCreate, IngredienteUpdate
 from fastapi import HTTPException
-from sqlmodel import select
+from sqlmodel import select, and_
+from sqlalchemy import func
+import math
 
 class IngredienteController:
     @staticmethod
@@ -20,14 +22,55 @@ class IngredienteController:
             return db_ingrediente
 
     @staticmethod
-    def list_ingredientes(db: Session) -> List[ingrediente_model]:
+    def list_ingredientes(
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+        nome: Optional[str] = None,
+        estoque: Optional[bool] = None,
+        quantidade_estoque_min: Optional[float] = None,
+        quantidade_estoque_max: Optional[float] = None,
+        peso: Optional[float] = None,
+    ) -> Dict[str, Any]:
         try:
-            ingredientes = db.execute(select(ingrediente_model)).scalars().all()
+            offset = (page - 1) * limit
+            query = select(ingrediente_model)
+            
+            filters = []
+            if nome:
+                filters.append(ingrediente_model.nome.ilike(f"%{nome}%"))
+            if estoque is not None:
+                filters.append(ingrediente_model.estoque == estoque)
+            if quantidade_estoque_min is not None:
+                filters.append(ingrediente_model.quantidade_estoque >= quantidade_estoque_min)
+            if quantidade_estoque_max is not None:
+                filters.append(ingrediente_model.quantidade_estoque <= quantidade_estoque_max)
+            if peso is not None:
+                filters.append(ingrediente_model.peso == peso)
+
+            if filters:
+                query = query.where(and_(*filters))
+        
+            ingredientes = db.execute(query.offset(offset).limit(limit)).scalars().all()
+            
+            total_query = select(func.count(ingrediente_model.id))
+            if filters:
+                total_query = total_query.where(and_(*filters))
+            
+            total = db.execute(total_query).scalar()
+            total_pages = math.ceil(total / limit)
+            return {
+                "data": ingredientes,
+                "pagination": {
+                    "total": total,
+                    "currentPage": page,
+                    "totalPages": total_pages,
+                    "totalItemsPerPage": limit
+                },
+            }
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return ingredientes
 
     @staticmethod
     def get_ingrediente(ingrediente_id: int, db: Session) -> ingrediente_model:

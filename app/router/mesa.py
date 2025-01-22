@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
-from typing import List
+from fastapi import APIRouter, Depends, Query
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Mesa as mesa_model
 from app.dto.mesa import MesaCreate, MesaUpdate
@@ -12,9 +12,26 @@ router_mesa = APIRouter()
 def create_mesa(mesa_data: MesaCreate, db: Session = Depends(get_db)):
     return MesaController.create_mesa(mesa_data, db)
 
-@router_mesa.get("/", response_model=List[mesa_model])
-def list_mesas(db: Session = Depends(get_db)):
-    return MesaController.list_mesas(db)
+@router_mesa.get("/", response_model=Dict[str, Any])
+def list_mesas(
+    page: int = Query(1, description="Número da página", ge=1),
+    limit: int = Query(10, description="Número de itens por página", ge=1),
+    numero_mesa: Optional[int] = Query(None, description="Filtrar por número da mesa"),
+    capacidade: Optional[int] = Query(None, description="Filtrar por capacidade"),
+    ocupada: Optional[bool] = Query(None, description="Filtrar por mesas ocupadas ou não"),
+    numero_pessoas: Optional[int] = Query(None, description="Filtrar por número de pessoas"),
+    db: Session = Depends(get_db)
+):
+    return MesaController.list_mesas(
+        db,
+        page=page,
+        limit=limit,
+        numero_mesa=numero_mesa,
+        capacidade=capacidade,
+        ocupada=ocupada,
+        numero_pessoas=numero_pessoas
+    )
+
 
 @router_mesa.get("/{mesa_id}", response_model=mesa_model)
 def get_mesa(mesa_id: int, db: Session = Depends(get_db)):
