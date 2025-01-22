@@ -8,26 +8,26 @@ from app.controller.comanda import ComandaController
 
 router_comanda = APIRouter()
 
-@router_comanda.post("/", response_model=comanda_model)
-def create_comanda(comanda_data: ComandaCreate, db: Session = Depends(get_db)):
+@router_comanda.post("/", response_model=comanda_model,status_code=201)
+def create_comanda(comanda_data: ComandaCreate, db: Session = Depends(get_db),):
     return ComandaController.create_comanda(comanda_data, db)
 
-@router_comanda.get("/", response_model=List[comanda_model])
+@router_comanda.get("/", response_model=List[comanda_model],status_code=200)
 def list_comandas(db: Session = Depends(get_db)):
     return ComandaController.list_comandas(db)
 
-@router_comanda.get("/{comanda_id}", response_model=comanda_model)
+@router_comanda.get("/{comanda_id}", response_model=comanda_model,status_code=200)
 def get_comanda(comanda_id: int, db: Session = Depends(get_db)):
     return ComandaController.get_comanda(comanda_id, db)
 
-@router_comanda.put("/{comanda_id}", response_model=comanda_model)
+@router_comanda.put("/{comanda_id}", response_model=comanda_model,status_code=200)
 def update_comanda(comanda_id: int, comanda_data: ComandaUpdate, db: Session = Depends(get_db)):
     return ComandaController.update_comanda(comanda_id, comanda_data, db)
 
-@router_comanda.delete("/{comanda_id}")
+@router_comanda.delete("/{comanda_id}",status_code=204)
 def delete_comanda(comanda_id: int, db: Session = Depends(get_db)):
     return {"ok": ComandaController.delete_comanda(comanda_id, db)}
 
-@router_comanda.get("/num")
+@router_comanda.get("/num",status_code=200)
 def get_num_comandas(db: Session = Depends(get_db)):
     return ComandaController.num_comanda(db)

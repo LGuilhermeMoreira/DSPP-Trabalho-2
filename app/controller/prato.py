@@ -1,6 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session
 from app.models.all_models import Prato as prato_model
+from app.models.all_models import PratoIngredienteLink 
 from app.dto.prato import PratoCreate, PratoUpdate
 from fastapi import HTTPException
 from sqlmodel import select
@@ -81,3 +82,42 @@ class PratoController:
             raise HTTPException(status_code=500, detail=str(e))
         finally:
             return {"quantiade" : num}
+    
+    #busca por texto
+    @staticmethod
+    def buscar_pratos_por_nome(db: Session, texto: str):
+        try:
+            statement = select(prato_model).where(prato_model.nome.contains(texto))
+            pratos = db.exec(statement).all()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        return pratos
+    
+    #busca e ordenação
+    @staticmethod
+    def listar_pratos_ordenados_por_preco(db: Session):
+        try:
+            statement = select(prato_model).order_by(prato_model.preco)
+            pratos = db.exec(statement).all()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return pratos
+    
+    #busca por relacionamento
+    @staticmethod
+    def listar_pratos_por_ingrediente(db: Session, ingrediente_id: int):
+        try:
+            statement = (
+            select(prato_model)
+            .join(PratoIngredienteLink, prato_model.id == PratoIngredienteLink.id_prato)
+            .where(PratoIngredienteLink.id_ingrediente == ingrediente_id)
+            )
+            pratos = db.exec(statement).all()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return pratos

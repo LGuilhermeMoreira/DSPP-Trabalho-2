@@ -83,7 +83,8 @@ class ClienteController:
             db.delete(db_cliente)
             db.commit()
             return True
-        
+    
+    #agregação e contagem
     @staticmethod
     def num_cliente(db: Session) -> int:
         try:
