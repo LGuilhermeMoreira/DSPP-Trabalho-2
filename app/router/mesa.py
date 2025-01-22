@@ -45,6 +45,6 @@ def update_mesa(mesa_id: int, mesa_data: MesaUpdate, db: Session = Depends(get_d
 def delete_mesa(mesa_id: int, db: Session = Depends(get_db)):
     return {"ok": MesaController.delete_mesa(mesa_id, db)}
 
-@router_mesa.get("/num",200)
+@router_mesa.get("/num",status_code=200)
 def get_num_mesas(db: Session = Depends(get_db)):
     return MesaController.um_mesa(db)
