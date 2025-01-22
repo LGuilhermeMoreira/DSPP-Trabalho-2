@@ -6,6 +6,9 @@ from fastapi import HTTPException
 from sqlmodel import select, and_
 from sqlalchemy import func
 import math
+import logging
+
+logger = logging.getLogger("api_logger")
 
 class ClienteController:
     @staticmethod
@@ -15,10 +18,12 @@ class ClienteController:
             db.add(db_cliente)
         except Exception as e:           
             db.rollback()
+            logger.error(f"Erro ao criar cliente: {e}")
             raise HTTPException(status_code=500, detail=str(e))
         finally:
             db.commit()
             db.refresh(db_cliente)
+            logger.info(f"Cliente criado com sucesso. ID: {db_cliente.id}")
             return db_cliente      
 
     @staticmethod
