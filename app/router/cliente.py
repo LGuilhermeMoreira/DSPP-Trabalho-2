@@ -8,11 +8,11 @@ from app.controller.cliente import ClienteController
 
 router_cliente = APIRouter()
 
-@router_cliente.post("/", response_model=cliente_model)
+@router_cliente.post("/", response_model=cliente_model,status_code=201)
 def create_cliente(cliente_data: ClienteCreate, db: Session = Depends(get_db)):
     return ClienteController.create_cliente(cliente_data, db)
 
-@router_cliente.get("/", response_model=Dict[str, Any])
+@router_cliente.get("/", response_model=Dict[str, Any],status_code=200)
 def list_clientes(
     page: int = Query(1, description="Número da página", ge=1),
     limit: int = Query(10, description="Número de itens por página", ge=1),
@@ -23,20 +23,20 @@ def list_clientes(
 ):
     return ClienteController.list_clientes(db, page=page, limit=limit, nome=nome, email=email, cpf=cpf)
 
-@router_cliente.get("/{cliente_id}", response_model=cliente_model)
+@router_cliente.get("/{cliente_id}", response_model=cliente_model,status_code=200)
 def get_cliente(cliente_id: int, db: Session = Depends(get_db)):
     return ClienteController.get_cliente(cliente_id, db)
 
 
-@router_cliente.put("/{cliente_id}", response_model=cliente_model)
+@router_cliente.put("/{cliente_id}", response_model=cliente_model,status_code=200)
 def update_cliente(cliente_id: int, cliente_data: ClienteUpdate, db: Session = Depends(get_db)):
     return ClienteController.update_cliente(cliente_id, cliente_data, db)
 
 
-@router_cliente.delete("/{cliente_id}")
-def delete_cliente(cliente_id: int, db: Session = Depends(get_db)):
+@router_cliente.delete("/{cliente_id}",status_code=204)
+def delete_cliente(cliente_id: int, db: Session = Depends(get_db),):
     return {"ok": ClienteController.delete_cliente(cliente_id, db)}
 
-@router_cliente.get("/num")
-def get_num_clientes(db: Session = Depends(get_db)):
+@router_cliente.get("/num",status_code=200)
+def get_num_clientes(db: Session = Depends(get_db),):
     return ClienteController.num_cliente(db)

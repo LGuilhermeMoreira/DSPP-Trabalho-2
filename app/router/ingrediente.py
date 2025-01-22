@@ -8,7 +8,7 @@ from app.controller.ingrediente import IngredienteController
 
 router_ingrediente = APIRouter()
 
-@router_ingrediente.post("/", response_model=ingrediente_model)
+@router_ingrediente.post("/", response_model=ingrediente_model,status_code=201)
 def create_ingrediente(ingrediente_data: IngredienteCreate, db: Session = Depends(get_db)):
     return IngredienteController.create_ingrediente(ingrediente_data, db)
 
@@ -34,18 +34,19 @@ def list_ingredientes(
         peso=peso
     )
 
-@router_ingrediente.get("/{ingrediente_id}", response_model=ingrediente_model)
+
+@router_ingrediente.get("/{ingrediente_id}", response_model=ingrediente_model, status_code=200)
 def get_ingrediente(ingrediente_id: int, db: Session = Depends(get_db)):
     return IngredienteController.get_ingrediente(ingrediente_id, db)
 
-@router_ingrediente.put("/{ingrediente_id}", response_model=ingrediente_model)
+@router_ingrediente.put("/{ingrediente_id}", response_model=ingrediente_model, status_code=200)
 def update_ingrediente(ingrediente_id: int, ingrediente_data: IngredienteUpdate, db: Session = Depends(get_db)):
     return IngredienteController.update_ingrediente(ingrediente_id, ingrediente_data, db)
 
-@router_ingrediente.delete("/{ingrediente_id}")
+@router_ingrediente.delete("/{ingrediente_id}", status_code=204)
 def delete_ingrediente(ingrediente_id: int, db: Session = Depends(get_db)):
     return {"ok": IngredienteController.delete_ingrediente(ingrediente_id, db)}
 
-@router_ingrediente.get("/num")
+@router_ingrediente.get("/num", status_code=200)
 def get_num_ingredientes(db: Session = Depends(get_db)):
     return IngredienteController.num_ingrediente(db)

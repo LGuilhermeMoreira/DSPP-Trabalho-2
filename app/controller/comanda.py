@@ -119,3 +119,15 @@ class ComandaController:
             raise HTTPException(status_code=500, detail=str(e))
         finally:
             return {"quantiade" : num}
+    
+    #filtro por relacionamento
+    @staticmethod
+    def listar_comandas_por_cliente(db: Session, cliente_id: int):
+        try:
+            statement = select(comanda_model).where(comanda_model.id_cliente == cliente_id)
+            comandas = db.exec(statement).all()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            return comandas
