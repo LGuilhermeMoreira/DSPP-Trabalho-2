@@ -40,3 +40,12 @@ def delete_cliente(cliente_id: int, db: Session = Depends(get_db),):
 @router_cliente.get("/num",status_code=200)
 def get_num_clientes(db: Session = Depends(get_db),):
     return ClienteController.num_cliente(db)
+
+@router_cliente.post("/comanda/{comanda_id}/prato/{prato_id}", status_code=200)
+def add_prato_to_comanda(
+    comanda_id: int,
+    prato_id: int,
+    quantidade: int = Query(1, description="Quantidade do prato", ge=1),
+    db: Session = Depends(get_db)
+):
+    return {"ok": ClienteController.add_prato_to_comanda(comanda_id, prato_id, quantidade, db)}

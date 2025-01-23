@@ -1,0 +1,6 @@
+2025-01-22 21:24:36,668 - INFO - Cliente criado com sucesso. ID: 1
+2025-01-22 21:24:38,968 - INFO - Cliente criado com sucesso. ID: 2
+2025-01-22 21:37:09,650 - INFO - Cliente criado com sucesso. ID: 3
+2025-01-22 21:53:42,153 - INFO - Ingrediente 1 adicionado ao prato 1 com sucesso.
+2025-01-22 21:54:29,391 - ERROR - Erro ao adicionar prato à comanda: name 'prato_model' is not defined
+2025-01-22 21:54:29,392 - INFO - Prato 1 adicionado à comanda 1 com sucesso.

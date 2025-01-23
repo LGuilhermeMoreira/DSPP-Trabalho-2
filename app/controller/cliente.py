@@ -1,6 +1,8 @@
 from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Cliente as cliente_model
+from app.models.all_models import Comanda as comanda_model
+from app.models.all_models import ComandaPratoLink as comandapratolink_model
 from app.dto.cliente import ClienteCreate, ClienteUpdate
 from fastapi import HTTPException
 from sqlmodel import select, and_
@@ -124,3 +126,34 @@ class ClienteController:
             raise HTTPException(status_code=500, detail=str(e))
         finally:
             return {"quantiade" : num}
+        
+    @staticmethod
+    def add_prato_to_comanda(comanda_id: int, prato_id: int, quantidade: int, db: Session) -> bool:
+        try:
+            db_comanda = db.get(comanda_model, comanda_id)
+            if not db_comanda:
+                raise HTTPException(status_code=404, detail="Comanda not found")
+            
+            db_prato = db.get(prato_model, prato_id)
+            if not db_prato:
+              raise HTTPException(status_code=404, detail="Prato not found")
+            
+            existing_link = db.execute(select(comandapratolink_model).where(and_(
+                comandapratolink_model.id_comanda == comanda_id,
+                comandapratolink_model.id_prato == prato_id
+            ))).scalar_one_or_none()
+
+            if existing_link:
+                existing_link.quantidade += quantidade
+            else:
+                db_comanda_prato_link = comandapratolink_model(id_comanda=comanda_id, id_prato=prato_id, quantidade=quantidade)
+                db.add(db_comanda_prato_link)
+
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao adicionar prato à comanda: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.commit()
+            logger.info(f"Prato {prato_id} adicionado à comanda {comanda_id} com sucesso.")
+            return True
