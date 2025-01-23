@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from sqlalchemy.orm import Session
 from app.models.all_models import Mesa as mesa_model
 from app.dto.mesa import MesaCreate, MesaUpdate
@@ -131,7 +131,7 @@ class MesaController:
             raise HTTPException(status_code=500, detail=str(e))
     
     @staticmethod
-    def num_mesa(db: Session) -> int:
+    def num_mesa(db: Session) -> Dict[str,int]:
         try:
             num = db.query(func.count(mesa_model.id)).scalar()
             logger.info(f"Quantidade de mesas: {num}")
@@ -139,4 +139,35 @@ class MesaController:
         except Exception as e:
             db.rollback()
             logger.error(f"Erro ao pegar a quantidade de mesas: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            if num is None:
+                return {"quantidade" : 0} #return 0 caso de erro
+            return {"quantidade": num}
+    
+    @staticmethod
+    def get_clientes_e_comandas_da_mesa(mesa_id: int, db: Session) -> List[Dict[str, Any]]:
+        try:
+            mesa = db.get(mesa_model, mesa_id)
+            if not mesa:
+                logger.warning(f"Mesa não encontrada. ID: {mesa_id}")
+                raise HTTPException(status_code=404, detail="Mesa not found")
+
+            clientes_e_comandas = []
+            for comanda in mesa.comandas:
+                if comanda.cliente:
+                    clientes_e_comandas.append({
+                        "id_cliente": comanda.cliente.id,
+                        "nome_cliente": comanda.cliente.nome,
+                        "id_comanda": comanda.id
+                    })
+
+            logger.info(f"Clientes e comandas da mesa obtidos com sucesso. ID da mesa: {mesa_id}")
+            return clientes_e_comandas
+
+        except HTTPException as e:
+            raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao obter clientes e comandas da mesa. ID da mesa: {mesa_id}, Erro: {e}")
             raise HTTPException(status_code=500, detail=str(e))

@@ -133,7 +133,7 @@ class IngredienteController:
             raise HTTPException(status_code=500, detail=str(e))
     
     @staticmethod
-    def num_ingrediente(db: Session) -> int:
+    def num_ingrediente(db: Session) -> Dict[str,int]:
         try:
            num = db.query(func.count(ingrediente_model.id)).scalar()
            logger.info(f"Quantidade de ingredientes: {num}")
@@ -142,3 +142,7 @@ class IngredienteController:
             db.rollback()
             logger.error(f"Erro ao pegar a quantidade de ingredientes: {e}")
             raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            if num is None:
+                return {"quantidade" : 0} #return 0 caso de erro
+            return {"quantidade": num}

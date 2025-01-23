@@ -37,7 +37,7 @@ def update_comanda(comanda_id: int, comanda_data: ComandaUpdate, db: Session = D
 def delete_comanda(comanda_id: int, db: Session = Depends(get_db)):
     return {"ok": ComandaController.delete_comanda(comanda_id, db)}
 
-@router_comanda.get("/num",status_code=200)
+@router_comanda.get("/num/",status_code=200)
 def get_num_comandas(db: Session = Depends(get_db)):
     return ComandaController.num_comanda(db)
 

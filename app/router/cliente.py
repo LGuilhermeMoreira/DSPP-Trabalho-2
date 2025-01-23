@@ -37,7 +37,7 @@ def update_cliente(cliente_id: int, cliente_data: ClienteUpdate, db: Session = D
 def delete_cliente(cliente_id: int, db: Session = Depends(get_db),):
     return {"ok": ClienteController.delete_cliente(cliente_id, db)}
 
-@router_cliente.get("/num",status_code=200)
+@router_cliente.get("/num/",status_code=200)
 def get_num_clientes(db: Session = Depends(get_db),):
     return ClienteController.num_cliente(db)
 

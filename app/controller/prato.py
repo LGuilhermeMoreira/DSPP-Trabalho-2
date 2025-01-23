@@ -131,7 +131,7 @@ class PratoController:
             raise HTTPException(status_code=500, detail=str(e))
     
     @staticmethod
-    def num_prato(db: Session) -> int:
+    def num_prato(db: Session) -> Dict[str,int]:
         try:
             num = db.query(func.count(prato_model.id)).scalar()
             logger.info(f"Quantidade de pratos: {num}")
@@ -140,6 +140,10 @@ class PratoController:
             db.rollback()
             logger.error(f"Erro ao pegar a quantidade de pratos: {e}")
             raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            if num is None:
+                return {"quantidade" : 0} #return 0 caso de erro
+            return {"quantidade": num}
     
     @staticmethod
     def listar_pratos_ordenados_por_preco(db: Session) -> List[prato_model]:
@@ -152,19 +156,10 @@ class PratoController:
             db.rollback()
             logger.error(f"Erro ao listar pratos ordenados por preco: {e}")
             raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            if pratos is not None:
+                return pratos
+            return []
     
-    @staticmethod
-    def listar_pratos_por_ingrediente(db: Session, ingrediente_id: int) -> List[prato_model]:
-        try:
-            statement = (
-            select(prato_model)
-            .join(PratoIngredienteLink, prato_model.id == PratoIngredienteLink.id_prato)
-            .where(PratoIngredienteLink.id_ingrediente == ingrediente_id)
-            )
-            pratos = db.execute(statement).scalars().all()
-            logger.info(f"Listagem de pratos por ingrediente realizada. ID do ingrediente: {ingrediente_id}")
-            return pratos
-        except Exception as e:
-            db.rollback()
-            logger.error(f"Erro ao listar pratos por ingrediente: {e}")
-            raise HTTPException(status_code=500, detail=str(e))
+
+    

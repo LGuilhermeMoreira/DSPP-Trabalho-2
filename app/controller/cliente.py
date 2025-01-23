@@ -131,17 +131,20 @@ class ClienteController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def num_cliente(db: Session) -> int:
+    def num_cliente(db: Session) -> Dict[str, int]:
+        num: Optional[int] = None 
         try:
-           num = db.query(func.count(cliente_model.id)).scalar()
-           logger.info(f"Quantidade de clientes: {num}")
-           return {"quantidade":num}
+            num = db.query(func.count(cliente_model.id)).scalar()
+            logger.info(f"Quantidade de clientes: {num}")
+            return {"quantidade": num}
         except Exception as e:
             db.rollback()
             logger.error(f"Erro ao pegar a quantidade de clientes: {e}")
             raise HTTPException(status_code=500, detail=str(e))
         finally:
-            return {"quantiade" : num}
+            if num is None:
+                return {"quantidade" : 0} 
+            return {"quantidade" : num}
         
     @staticmethod
     def add_prato_to_comanda(comanda_id: int, prato_id: int, quantidade: int, db: Session) -> bool:

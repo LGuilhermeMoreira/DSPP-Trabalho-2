@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Path
 from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Mesa as mesa_model
@@ -45,6 +45,10 @@ def update_mesa(mesa_id: int, mesa_data: MesaUpdate, db: Session = Depends(get_d
 def delete_mesa(mesa_id: int, db: Session = Depends(get_db)):
     return {"ok": MesaController.delete_mesa(mesa_id, db)}
 
-@router_mesa.get("/num",status_code=200)
+@router_mesa.get("/num/",status_code=200)
 def get_num_mesas(db: Session = Depends(get_db)):
-    return MesaController.um_mesa(db)
+    return MesaController.num_mesa(db)
+
+@router_mesa.get("/cliente_e_comanda/{mesa_id}",status_code=200)
+def get_cliente_and_comanda(db : Session = Depends(get_db),mesa_id :int =  Path()):
+    return MesaController.get_clientes_e_comandas_da_mesa(mesa_id,db)

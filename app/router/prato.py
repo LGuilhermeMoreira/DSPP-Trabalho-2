@@ -44,14 +44,10 @@ def update_prato(prato_id: int, prato_data: PratoUpdate, db: Session = Depends(g
 def delete_prato(prato_id: int, db: Session = Depends(get_db)):
     return {"ok": PratoController.delete_prato(prato_id, db)}
 
-@router_prato.get("/num",status_code=200)
+@router_prato.get("/num/",status_code=200)
 def get_num_pratos(db: Session = Depends(get_db)):
     return PratoController.num_prato(db)
 
-@router_prato.get("/ordenado_por_preco",status_code=200)
+@router_prato.get("/ordenado_por_preco/",status_code=200)
 def get_pratos_ordenados_por_preco(db: Session = Depends(get_db)):
     return PratoController.listar_pratos_ordenados_por_preco(db)
-
-@router_prato.get("prato_por_ingrediente/{ingrediente_id}",status_code=200)
-def get_pratos_por_ingrediente(ingrediente_id: int, db: Session = Depends(get_db)):
-    return PratoController.listar_pratos_por_ingrediente(ingrediente_id, db)
