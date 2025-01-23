@@ -26,13 +26,13 @@ class Cliente(SQLModel, table=True):
 class Comanda(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     id_cliente: Optional[int] = Field(default=None, foreign_key="cliente.id")
-    id_mesa: Optional[int] = Field(default=None, foreign_key="mesa.id", unique=True)
+    id_mesa: Optional[int] = Field(default=None, foreign_key="mesa.id")
     data_hora_abertura: datetime = Field(sa_column_kwargs={"default": datetime.now})
     data_hora_fechamento: Optional[datetime] = Field(default=None)
     status: str
 
     cliente: Optional["Cliente"] = Relationship(back_populates="comandas")
-    mesa: Optional["Mesa"] = Relationship(back_populates="comanda")
+    mesa: Optional["Mesa"] = Relationship(back_populates="comandas")
     pratos: List["Prato"] = Relationship(back_populates="comandas", link_model= ComandaPratoLink) 
 
 class Ingrediente(SQLModel, table=True):
@@ -50,7 +50,8 @@ class Mesa(SQLModel, table=True):
     capacidade: int
     ocupada: bool = Field(default=False)
     numero_pessoas: Optional[int]
-    comanda: Optional["Comanda"] = Relationship(back_populates="mesa", sa_relationship_kwargs={"uselist": False})
+
+    comandas: List["Comanda"] = Relationship(back_populates="mesa")
 
 class Prato(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

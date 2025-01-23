@@ -1,54 +1,55 @@
+
 2025-01-22 20:56:07,282 - INFO - API inicializada
-2025-01-22 20:56:31,167 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, Página=1, Limite=10
+2025-01-22 20:56:31,167 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, PÃ¡gina=1, Limite=10
 2025-01-22 20:57:12,828 - INFO - Cliente obtido com sucesso. ID: 1
 2025-01-22 20:57:15,054 - INFO - Cliente obtido com sucesso. ID: 1
 2025-01-22 20:57:38,981 - INFO - Cliente obtido com sucesso. ID: 2
-2025-01-22 20:57:44,231 - WARNING - Cliente não encontrado. ID: 45
+2025-01-22 20:57:44,231 - WARNING - Cliente nÃ£o encontrado. ID: 45
 2025-01-22 20:57:44,232 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 20:57:44,232 - INFO - Cliente obtido com sucesso. ID: 45
 2025-01-22 20:58:42,309 - INFO - Cliente obtido com sucesso. ID: 1
 2025-01-22 20:58:56,241 - INFO - Cliente obtido com sucesso. ID: 10
-2025-01-22 20:59:03,843 - WARNING - Cliente não encontrado. ID: 22152
+2025-01-22 20:59:03,843 - WARNING - Cliente nÃ£o encontrado. ID: 22152
 2025-01-22 20:59:03,843 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 20:59:03,843 - INFO - Cliente obtido com sucesso. ID: 22152
-2025-01-22 20:59:20,069 - WARNING - Cliente não encontrado. ID: 22152
+2025-01-22 20:59:20,069 - WARNING - Cliente nÃ£o encontrado. ID: 22152
 2025-01-22 20:59:20,069 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 20:59:20,069 - INFO - Cliente obtido com sucesso. ID: 22152
 2025-01-22 20:59:27,763 - INFO - Cliente obtido com sucesso. ID: 1
-2025-01-22 20:59:39,935 - WARNING - Cliente não encontrado. ID: 155
+2025-01-22 20:59:39,935 - WARNING - Cliente nÃ£o encontrado. ID: 155
 2025-01-22 20:59:39,936 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 20:59:39,937 - INFO - Cliente obtido com sucesso. ID: 155
 2025-01-22 21:03:16,901 - INFO - Cliente obtido com sucesso. ID: 1
 2025-01-22 21:03:18,464 - INFO - Cliente obtido com sucesso. ID: 1
-2025-01-22 21:03:23,395 - WARNING - Cliente não encontrado. ID: 154115
+2025-01-22 21:03:23,395 - WARNING - Cliente nÃ£o encontrado. ID: 154115
 2025-01-22 21:03:23,396 - ERROR - Erro ao obter cliente: 404: Cliente not found
-2025-01-22 21:03:35,560 - WARNING - Cliente não encontrado. ID: 44
+2025-01-22 21:03:35,560 - WARNING - Cliente nÃ£o encontrado. ID: 44
 2025-01-22 21:03:35,560 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 21:09:02,395 - INFO - Cliente obtido com sucesso. ID: 1
-2025-01-22 21:09:08,236 - WARNING - Cliente não encontrado. ID: 15515
+2025-01-22 21:09:08,236 - WARNING - Cliente nÃ£o encontrado. ID: 15515
 2025-01-22 21:09:08,236 - ERROR - Erro ao obter cliente: 404: Cliente not found
-2025-01-22 21:09:49,290 - WARNING - Cliente não encontrado. ID: 1111
+2025-01-22 21:09:49,290 - WARNING - Cliente nÃ£o encontrado. ID: 1111
 2025-01-22 21:09:49,290 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 21:11:30,812 - INFO - Cliente obtido com sucesso. ID: 1
-2025-01-22 21:11:40,979 - WARNING - Cliente não encontrado. ID: 5555
+2025-01-22 21:11:40,979 - WARNING - Cliente nÃ£o encontrado. ID: 5555
 2025-01-22 21:14:49,114 - INFO - Cliente obtido com sucesso. ID: 1
-2025-01-22 21:14:53,113 - WARNING - Cliente não encontrado. ID: 11111
+2025-01-22 21:14:53,113 - WARNING - Cliente nÃ£o encontrado. ID: 11111
 2025-01-22 21:14:53,115 - ERROR - Erro ao obter cliente: 404: Cliente not found
-2025-01-22 21:15:28,373 - WARNING - Cliente não encontrado. ID: 11111
+2025-01-22 21:15:28,373 - WARNING - Cliente nÃ£o encontrado. ID: 11111
 2025-01-22 21:15:28,374 - ERROR - Erro ao obter cliente: 404: Cliente not found
 2025-01-22 21:15:37,627 - INFO - Cliente obtido com sucesso. ID: 1
-2025-01-22 21:15:46,037 - WARNING - Cliente não encontrado. ID: 2222
-2025-01-22 21:15:50,801 - WARNING - Cliente não encontrado. ID: 1111
-2025-01-22 21:16:30,929 - INFO - Listagem de clientes realizada. Filtros: Nome=asdasd, Email=asdasdasd, CPF=asdasd, Página=1, Limite=10
+2025-01-22 21:15:46,037 - WARNING - Cliente nÃ£o encontrado. ID: 2222
+2025-01-22 21:15:50,801 - WARNING - Cliente nÃ£o encontrado. ID: 1111
+2025-01-22 21:16:30,929 - INFO - Listagem de clientes realizada. Filtros: Nome=asdasd, Email=asdasdasd, CPF=asdasd, PÃ¡gina=1, Limite=10
 2025-01-22 21:16:55,524 - INFO - Cliente criado com sucesso. ID: 16
 2025-01-22 21:17:40,995 - INFO - Cliente criado com sucesso. ID: 17
 2025-01-22 21:18:38,302 - INFO - Cliente criado com sucesso. ID: 18
-2025-01-22 21:19:06,682 - INFO - Listagem de clientes realizada. Filtros: Nome=asdasd, Email=asdasdasd, CPF=asdasd, Página=1, Limite=10
-2025-01-22 21:19:14,750 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, Página=1, Limite=10
-2025-01-22 21:19:29,773 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, Página=1, Limite=20
-2025-01-22 21:33:51,011 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, Página=1, Limite=10
-2025-01-22 21:34:02,514 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, Página=1, Limite=10
-2025-01-22 21:34:16,323 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, Página=1, Limite=5
+2025-01-22 21:19:06,682 - INFO - Listagem de clientes realizada. Filtros: Nome=asdasd, Email=asdasdasd, CPF=asdasd, PÃ¡gina=1, Limite=10
+2025-01-22 21:19:14,750 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, PÃ¡gina=1, Limite=10
+2025-01-22 21:19:29,773 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, PÃ¡gina=1, Limite=20
+2025-01-22 21:33:51,011 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, PÃ¡gina=1, Limite=10
+2025-01-22 21:34:02,514 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, PÃ¡gina=1, Limite=10
+2025-01-22 21:34:16,323 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, PÃ¡gina=1, Limite=5
 2025-01-22 21:35:10,503 - ERROR - Erro ao criar comanda: (pymysql.err.OperationalError) (1292, "Incorrect datetime value: 'string' for column 'data_hora_abertura' at row 1")
 [SQL: INSERT INTO comanda (id_cliente, id_mesa, data_hora_abertura, data_hora_fechamento, status) VALUES (%(id_cliente)s, %(id_mesa)s, %(data_hora_abertura)s, %(data_hora_fechamento)s, %(status)s)]
 [parameters: {'id_cliente': 1, 'id_mesa': 1, 'data_hora_abertura': 'string', 'data_hora_fechamento': 'string', 'status': 'string'}]
@@ -75,13 +76,13 @@
 [parameters: {'id_cliente': 1, 'id_mesa': 2, 'data_hora_abertura': '2025-01-23T00:35:44.895Z', 'data_hora_fechamento': '2025-01-23T00:35:44.895Z', 'status': 'string'}]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-01-22 21:42:56,900 - INFO - Comanda criada com sucesso. ID: 14
-2025-01-22 21:43:33,838 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, Página=1, Limite=10
-2025-01-22 21:44:00,747 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=1123, Mesa ID=None, Status=None, Página=1, Limite=10
-2025-01-22 21:44:08,230 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, Página=1, Limite=10
+2025-01-22 21:43:33,838 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, PÃ¡gina=1, Limite=10
+2025-01-22 21:44:00,747 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=1123, Mesa ID=None, Status=None, PÃ¡gina=1, Limite=10
+2025-01-22 21:44:08,230 - INFO - Listagem de comandas realizada. Filtros: Cliente ID=None, Mesa ID=None, Status=None, PÃ¡gina=1, Limite=10
 2025-01-22 21:50:46,130 - INFO - Listagem de ingredientes realizada. Filtros: Nome=None, Estoque=None, Quantidade Min=None, Quantidade Max=None, Peso=None, Pagina=1, Limite=10
 2025-01-22 21:51:01,943 - INFO - Listagem de ingredientes realizada. Filtros: Nome=None, Estoque=True, Quantidade Min=None, Quantidade Max=None, Peso=None, Pagina=1, Limite=10
-2025-01-22 21:51:21,986 - INFO - Listagem de pratos realizada. Filtros: Nome=None, Preço Min=None, Preço Max=None, Disponível=None, Pagina=1, Limite=10
-2025-01-22 21:54:47,224 - INFO - Listagem de pratos realizada. Filtros: Nome=None, Preço Min=None, Preço Max=None, Disponível=None, Pagina=1, Limite=10
+2025-01-22 21:51:21,986 - INFO - Listagem de pratos realizada. Filtros: Nome=None, PreÃ§o Min=None, PreÃ§o Max=None, DisponÃ­vel=None, Pagina=1, Limite=10
+2025-01-22 21:54:47,224 - INFO - Listagem de pratos realizada. Filtros: Nome=None, PreÃ§o Min=None, PreÃ§o Max=None, DisponÃ­vel=None, Pagina=1, Limite=10
 2025-01-22 21:55:02,557 - INFO - Listagem de pratos realizada. Filtros: Nome=None, Preco Min=None, Preco Max=None, Disponivel=None, Pagina=1, Limite=10
 2025-01-22 21:55:19,193 - INFO - Listagem de ingredientes realizada. Filtros: Nome=None, Estoque=None, Quantidade Min=None, Quantidade Max=None, Peso=None, Pagina=1, Limite=10
 2025-01-22 21:56:05,049 - INFO - Ingrediente atualizado com sucesso. ID: 1
