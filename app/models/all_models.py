@@ -40,7 +40,8 @@ class Ingrediente(SQLModel, table=True):
     estoque: bool
     quantidade_estoque: float
     peso: float
-
+    cor : str
+    
     pratos: List["Prato"] = Relationship(back_populates="ingredientes", link_model=PratoIngredienteLink) 
 
 class Mesa(SQLModel, table=True):
