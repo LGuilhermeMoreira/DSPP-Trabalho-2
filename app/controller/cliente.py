@@ -58,6 +58,7 @@ class ClienteController:
 
             total = db.execute(total_query).scalar()
             total_pages = math.ceil(total / limit)
+            logger.info(f"Listagem de clientes realizada. Filtros: Nome={nome}, Email={email}, CPF={cpf}, Pagina={page}, Limite={limit}")
             return {
                 "data": clientes,
                 "pagination": {
@@ -69,6 +70,7 @@ class ClienteController:
             }
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao listar clientes: {e}")
             raise HTTPException(status_code=500, detail=str(e))
     
     @staticmethod
@@ -76,51 +78,63 @@ class ClienteController:
         try:
             cliente = db.get(cliente_model, cliente_id)
             if not cliente:
+                logger.warning(f"Cliente nao encontrado. ID: {cliente_id}")
                 raise HTTPException(status_code=404, detail="Cliente not found")
+            logger.info(f"Cliente obtido com sucesso. ID: {cliente_id}")
+            return cliente
+        except HTTPException as e:
+           raise
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao obter cliente: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return cliente  
-
+        
     @staticmethod
     def update_cliente(cliente_id: int, cliente_data: ClienteUpdate, db: Session) -> cliente_model:
         try:
             db_cliente = db.get(cliente_model, cliente_id)
             if not db_cliente:
+                logger.warning(f"Cliente nao encontrado para atualizacao. ID: {cliente_id}")
                 raise HTTPException(status_code=404, detail="Cliente not found")
             for key, value in cliente_data.model_dump(exclude_unset=True).items():
                 setattr(db_cliente, key, value)
             db.add(db_cliente)
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
             db.commit()
             db.refresh(db_cliente)
+            logger.info(f"Cliente atualizado com sucesso. ID: {cliente_id}")
             return db_cliente
+        except HTTPException as e:
+            raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao atualizar cliente. ID: {cliente_id}, Erro: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def delete_cliente(cliente_id: int, db: Session) -> bool:
         try:
-            db_cliente = db.get(cliente_model, cliente_id)
-            if not db_cliente:
-                raise HTTPException(status_code=404, detail="Cliente not found")
+           db_cliente = db.get(cliente_model, cliente_id)
+           if not db_cliente:
+              logger.warning(f"Cliente nao encontrado para remocao. ID: {cliente_id}")
+              raise HTTPException(status_code=404, detail="Cliente not found")
+           db.delete(db_cliente)
+           db.commit()
+           logger.info(f"Cliente removido com sucesso. ID: {cliente_id}")
+           return True
+        except HTTPException as e:
+           raise
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao remover cliente. ID: {cliente_id}, Erro: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            db.delete(db_cliente)
-            db.commit()
-            return True
-    
-    #agregação e contagem
+
     @staticmethod
     def num_cliente(db: Session) -> int:
         try:
-            num = db.execute(select(cliente_model)).count()
+           num = db.query(func.count(cliente_model.id)).scalar()
+           logger.info(f"Quantidade de clientes: {num}")
+           return {"quantidade":num}
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao pegar a quantidade de clientes: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return {"quantiade" : num}

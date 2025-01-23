@@ -1,11 +1,13 @@
-from typing import Optional, Dict, Any
+from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Comanda as comanda_model
-from app.dto.comanda import ComandaCreate, ComandaUpdate
 from fastapi import HTTPException
-from sqlmodel import select, and_
-from sqlalchemy import func
+from sqlmodel import select, and_, func
+from app.dto.comanda import ComandaCreate, ComandaUpdate
 import math
+import logging
+
+logger = logging.getLogger("api_logger")
 
 
 class ComandaController:
@@ -14,13 +16,14 @@ class ComandaController:
         try:
             db_comanda = comanda_model(**comanda_data.model_dump())
             db.add(db_comanda)
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
             db.commit()
             db.refresh(db_comanda)
+            logger.info(f"Comanda criada com sucesso. ID: {db_comanda.id}")
             return db_comanda
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao criar comanda: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def list_comandas(
@@ -54,6 +57,7 @@ class ComandaController:
             
             total = db.execute(total_query).scalar()
             total_pages = math.ceil(total / limit)
+            logger.info(f"Listagem de comandas realizada. Filtros: Cliente ID={id_cliente}, Mesa ID={id_mesa}, Status={status}, Página={page}, Limite={limit}")
             return {
                 "data": comandas,
                 "pagination": {
@@ -65,6 +69,7 @@ class ComandaController:
             }
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao listar comandas: {e}")
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
@@ -72,74 +77,87 @@ class ComandaController:
         try:
             comanda = db.get(comanda_model, comanda_id)
             if not comanda:
+                logger.warning(f"Comanda nao encontrada. ID: {comanda_id}")
                 raise HTTPException(status_code=404, detail="Comanda not found")
+            logger.info(f"Comanda obtida com sucesso. ID: {comanda_id}")
+            return comanda
+        except HTTPException as e:
+            raise
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao obter comanda: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return comanda
 
     @staticmethod
     def update_comanda(comanda_id: int, comanda_data: ComandaUpdate, db: Session) -> comanda_model:
         try:
             db_comanda = db.get(comanda_model, comanda_id)
             if not db_comanda:
+                logger.warning(f"Comanda nao encontrada para atualizacao. ID: {comanda_id}")
                 raise HTTPException(status_code=404, detail="Comanda not found")
             for key, value in comanda_data.model_dump(exclude_unset=True).items():
                 setattr(db_comanda, key, value)
             db.add(db_comanda)
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
             db.commit()
             db.refresh(db_comanda)
+            logger.info(f"Comanda atualizada com sucesso. ID: {comanda_id}")
             return db_comanda
+        except HTTPException as e:
+             raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao atualizar comanda. ID: {comanda_id}, Erro: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def delete_comanda(comanda_id: int, db: Session) -> bool:
         try:
             db_comanda = db.get(comanda_model, comanda_id)
             if not db_comanda:
-                 raise HTTPException(status_code=404, detail="Comanda not found")
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
+                logger.warning(f"Comanda nao encontrada para remocao. ID: {comanda_id}")
+                raise HTTPException(status_code=404, detail="Comanda not found")
             db.delete(db_comanda)
             db.commit()
+            logger.info(f"Comanda removida com sucesso. ID: {comanda_id}")
             return True
+        except HTTPException as e:
+            raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao remover comanda. ID: {comanda_id}, Erro: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def num_comanda(db: Session) -> int:
         try:
-            num = db.execute(select(comanda_model)).count()
+            num = db.query(func.count(comanda_model.id)).scalar()
+            logger.info(f"Quantidade de comandas: {num}")
+            return {"quantidade":num}
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao pegar a quantidade de comandas: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return {"quantiade" : num}
     
-    #filtro por relacionamento
     @staticmethod
-    def listar_comandas_por_cliente(db: Session, cliente_id: int):
+    def listar_comandas_por_cliente(db: Session, cliente_id: int) -> List[comanda_model]:
         try:
             statement = select(comanda_model).where(comanda_model.id_cliente == cliente_id)
-            comandas = db.exec(statement).all()
+            comandas = db.execute(statement).scalars().all()
+            logger.info(f"Listagem de comandas por cliente realizada. ID do cliente: {cliente_id}")
+            return comandas
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao listar comandas por cliente: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return comandas
-        
-    #filtro por ano
+    
     @staticmethod
-    def listar_comandas_por_ano(db: Session, ano: int):
+    def listar_comandas_por_ano(db: Session, ano: int) -> List[comanda_model]:
         try:
             statement = select(comanda_model).where(func.extract('year', comanda_model.data_hora_abertura) == ano)
-            comandas = db.exec(statement).all()
+            comandas = db.execute(statement).scalars().all()
+            logger.info(f"Listagem de comandas por ano realizada. Ano: {ano}")
+            return comandas
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao listar comandas por ano: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return comandas 
