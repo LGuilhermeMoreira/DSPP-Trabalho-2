@@ -189,3 +189,48 @@
 2025-01-22 22:49:29,013 - INFO - Listagem de comandas por ano realizada. Ano: 2025
 2025-01-22 22:49:38,079 - INFO - Listagem de pratos ordenada por preco realizada
 2025-01-22 22:49:38,752 - INFO - Listagem de pratos ordenada por preco realizada
+2025-01-22 22:57:51,481 - INFO - Cliente criado com sucesso. ID: 7
+2025-01-22 22:58:09,800 - INFO - Cliente criado com sucesso. ID: 8
+2025-01-22 22:58:14,327 - INFO - Listagem de clientes realizada. Filtros: Nome=None, Email=None, CPF=None, Pagina=1, Limite=10
+2025-01-22 22:58:27,862 - INFO - Cliente obtido com sucesso. ID: 7
+2025-01-22 22:58:30,709 - INFO - Cliente obtido com sucesso. ID: 8
+2025-01-22 22:58:32,345 - WARNING - Cliente nao encontrado. ID: 2
+2025-01-22 22:58:48,844 - INFO - Cliente atualizado com sucesso. ID: 8
+2025-01-22 22:59:17,237 - INFO - Cliente atualizado com sucesso. ID: 8
+2025-01-22 22:59:27,905 - INFO - Cliente criado com sucesso. ID: 9
+2025-01-22 22:59:36,385 - INFO - Cliente removido com sucesso. ID: 9
+2025-01-22 23:00:54,854 - INFO - Mesa criada com sucesso. ID: 4
+2025-01-22 23:01:10,437 - INFO - Listagem de mesas realizada. Filtros: Numero Mesa=None, Capacidade=None, Ocupada=None, Numero Pessoas=None, Pagina=1, Limite=10
+2025-01-22 23:01:11,139 - INFO - Listagem de mesas realizada. Filtros: Numero Mesa=None, Capacidade=None, Ocupada=None, Numero Pessoas=None, Pagina=1, Limite=10
+2025-01-22 23:02:41,784 - INFO - Mesa obtida com sucesso. ID: 4
+2025-01-22 23:02:45,312 - ERROR - Erro ao criar mesa: (pymysql.err.IntegrityError) (1062, "Duplicate entry '1' for key 'mesa.numero_mesa'")
+[SQL: INSERT INTO mesa (numero_mesa, capacidade, ocupada, numero_pessoas) VALUES (%(numero_mesa)s, %(capacidade)s, %(ocupada)s, %(numero_pessoas)s)]
+[parameters: {'numero_mesa': 1, 'capacidade': 2, 'ocupada': 1, 'numero_pessoas': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-01-22 23:02:53,829 - INFO - Mesa criada com sucesso. ID: 6
+2025-01-22 23:03:24,746 - INFO - Listagem de mesas realizada. Filtros: Numero Mesa=None, Capacidade=None, Ocupada=None, Numero Pessoas=None, Pagina=1, Limite=10
+2025-01-22 23:03:41,190 - INFO - Mesa removida com sucesso. ID: 6
+2025-01-22 23:04:18,914 - INFO - Comanda criada com sucesso. ID: 10
+2025-01-22 23:04:32,367 - INFO - Comanda criada com sucesso. ID: 11
+2025-01-22 23:04:54,297 - INFO - Ingrediente criado com sucesso. ID: 7
+2025-01-22 23:05:00,730 - INFO - Ingrediente criado com sucesso. ID: 8
+2025-01-22 23:05:10,390 - INFO - Ingrediente criado com sucesso. ID: 9
+2025-01-22 23:05:14,782 - INFO - Listagem de ingredientes realizada. Filtros: Nome=None, Estoque=None, Quantidade Min=None, Quantidade Max=None, Peso=None, Pagina=1, Limite=10
+2025-01-22 23:05:47,445 - INFO - Ingrediente obtido com sucesso. ID: 8
+2025-01-22 23:06:01,428 - INFO - Ingrediente atualizado com sucesso. ID: 7
+2025-01-22 23:06:18,716 - INFO - Listagem de pratos realizada. Filtros: Nome=None, Preco Min=None, Preco Max=None, Disponivel=None, Pagina=1, Limite=10
+2025-01-22 23:06:29,763 - INFO - Listagem de ingredientes realizada. Filtros: Nome=None, Estoque=None, Quantidade Min=None, Quantidade Max=None, Peso=None, Pagina=1, Limite=10
+2025-01-22 23:06:37,747 - INFO - Ingrediente removido com sucesso. ID: 7
+2025-01-22 23:06:38,824 - WARNING - Ingrediente nao encontrado para remocao. ID: 7
+2025-01-22 23:06:43,247 - INFO - Quantidade de ingredientes: 2
+2025-01-22 23:06:51,555 - INFO - Listagem de pratos realizada. Filtros: Nome=None, Preco Min=None, Preco Max=None, Disponivel=None, Pagina=1, Limite=10
+2025-01-22 23:07:21,314 - INFO - Prato criado com sucesso. ID: 5
+2025-01-22 23:08:11,684 - INFO - Prato criado com sucesso. ID: 6
+2025-01-22 23:08:15,871 - INFO - Listagem de pratos realizada. Filtros: Nome=None, Preco Min=None, Preco Max=None, Disponivel=None, Pagina=1, Limite=10
+2025-01-22 23:08:48,750 - INFO - Listagem de ingredientes realizada. Filtros: Nome=None, Estoque=None, Quantidade Min=None, Quantidade Max=None, Peso=None, Pagina=1, Limite=10
+2025-01-22 23:09:18,311 - INFO - Quantidade de pratos: 2
+2025-01-22 23:09:34,858 - INFO - Ingrediente 8 adicionado ao prato 5 com sucesso.
+2025-01-22 23:10:12,286 - ERROR - Erro ao adicionar prato à comanda: name 'prato_model' is not defined
+2025-01-22 23:10:12,286 - INFO - Prato 5 adicionado à comanda 10 com sucesso.
+2025-01-22 23:10:24,980 - INFO - Clientes e comandas da mesa obtidos com sucesso. ID da mesa: 4
+2025-01-22 23:10:55,170 - INFO - Ingrediente 9 adicionado ao prato 6 com sucesso.

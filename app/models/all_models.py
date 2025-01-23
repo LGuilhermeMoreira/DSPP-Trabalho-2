@@ -2,7 +2,6 @@ from typing import Optional, List
 from sqlmodel import Field, Relationship, SQLModel, DateTime
 from datetime import datetime
 
-
 class ComandaPratoLink(SQLModel, table=True):
     id_comanda: Optional[int] = Field(default=None, foreign_key="comanda.id", primary_key=True)
     id_prato: Optional[int] = Field(default=None, foreign_key="prato.id", primary_key=True)
