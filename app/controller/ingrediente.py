@@ -144,5 +144,5 @@ class IngredienteController:
             raise HTTPException(status_code=500, detail=str(e))
         finally:
             if num is None:
-                return {"quantidade" : 0} #return 0 caso de erro
+                return {"quantidade" : 0} 
             return {"quantidade": num}
