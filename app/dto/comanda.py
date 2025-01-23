@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+
 class ComandaCreate(BaseModel):
     id_cliente: int 
     id_mesa: int

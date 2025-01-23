@@ -1,11 +1,14 @@
-from typing import List, Optional, Dict, Any
+from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.models.all_models import Mesa as mesa_model
 from app.dto.mesa import MesaCreate, MesaUpdate
 from fastapi import HTTPException
-from sqlmodel import select, and_
-from sqlalchemy import func
+from sqlmodel import select, and_, func
 import math
+import logging
+
+logger = logging.getLogger("api_logger")
+
 
 class MesaController:
     @staticmethod
@@ -13,13 +16,14 @@ class MesaController:
         try:
             db_mesa = mesa_model(**mesa_data.model_dump())
             db.add(db_mesa)
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
             db.commit()
             db.refresh(db_mesa)
+            logger.info(f"Mesa criada com sucesso. ID: {db_mesa.id}")
             return db_mesa
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao criar mesa: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def list_mesas(
@@ -56,6 +60,7 @@ class MesaController:
             
             total = db.execute(total_query).scalar()
             total_pages = math.ceil(total / limit)
+            logger.info(f"Listagem de mesas realizada. Filtros: Numero Mesa={numero_mesa}, Capacidade={capacidade}, Ocupada={ocupada}, Numero Pessoas={numero_pessoas}, Pagina={page}, Limite={limit}")
             return {
                 "data": mesas,
                 "pagination": {
@@ -67,6 +72,7 @@ class MesaController:
             }
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao listar mesas: {e}")
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
@@ -74,50 +80,63 @@ class MesaController:
         try:
             mesa = db.get(mesa_model, mesa_id)
             if not mesa:
+                logger.warning(f"Mesa nao encontrada. ID: {mesa_id}")
                 raise HTTPException(status_code=404, detail="Mesa not found")
+            logger.info(f"Mesa obtida com sucesso. ID: {mesa_id}")
+            return mesa
+        except HTTPException as e:
+           raise
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao obter mesa: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return mesa
 
     @staticmethod
     def update_mesa(mesa_id: int, mesa_data: MesaUpdate, db: Session) -> mesa_model:
         try:
             db_mesa = db.get(mesa_model, mesa_id)
             if not db_mesa:
+                logger.warning(f"Mesa nao encontrada para atualizacao. ID: {mesa_id}")
                 raise HTTPException(status_code=404, detail="Mesa not found")
             for key, value in mesa_data.model_dump(exclude_unset=True).items():
                 setattr(db_mesa, key, value)
             db.add(db_mesa)
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
             db.commit()
             db.refresh(db_mesa)
+            logger.info(f"Mesa atualizada com sucesso. ID: {mesa_id}")
             return db_mesa
+        except HTTPException as e:
+           raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao atualizar mesa. ID: {mesa_id}, Erro: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def delete_mesa(mesa_id: int, db: Session) -> bool:
         try:
             db_mesa = db.get(mesa_model, mesa_id)
             if not db_mesa:
+                logger.warning(f"Mesa nao encontrada para remocao. ID: {mesa_id}")
                 raise HTTPException(status_code=404, detail="Mesa not found")
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
-        finally:
             db.delete(db_mesa)
             db.commit()
+            logger.info(f"Mesa removida com sucesso. ID: {mesa_id}")
             return True
+        except HTTPException as e:
+           raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Erro ao remover mesa. ID: {mesa_id}, Erro: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
     
     @staticmethod
     def num_mesa(db: Session) -> int:
         try:
-            num = db.execute(select(mesa_model)).count()
+            num = db.query(func.count(mesa_model.id)).scalar()
+            logger.info(f"Quantidade de mesas: {num}")
+            return {"quantidade":num}
         except Exception as e:
             db.rollback()
+            logger.error(f"Erro ao pegar a quantidade de mesas: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
-            return {"quantiade" : num}
